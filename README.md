@@ -146,15 +146,49 @@ Now that both the template `Submit` object and the `Schedd` object have been ins
 > at submission time.
 > If using the v2 bindings, the original `queue` statement in the submit file will be respected but we can override.
 
-While the original file `sleep.sub` has `queue 2`, let's modify our submission to submit 3 jobs instead.
+While the original file `sleep.sub` has `queue 2`, let's modify our submission. 
 
-To submit 3 jobs, we can use the following command:
+We could simply submit 3 jobs instead, with the following command:
 
 ```
 submit_info = schedd.submit(template_object, count=3)
 ```
 
-Because a lot of information is returned by the `.submit()` method, we capture that in its own variable for future reference.
+(Because a lot of information is returned by the `.submit()` method, we capture that in its own variable for future reference.)
+
+**But** the more interesting case is to use the "itemdata" feature.
+
+### Submitting the Submit object using Itemdata
+
+In the submit template, we have `arguments = $(Process)`.
+
+Let's change this to `arguments = $(my_variable)`:
+
+```
+template_object['arguments'] = '$(my_variable)'
+```
+
+We want to create a list of jobs where each job has a different value of `my_variable`.
+To do so, we are going to create a list object, where each item corresponds to the changes to the template `Submit` object for one job.
+
+Let's make the list, where you can create however many rows and use whatever values you want.
+(Though since this is a tutorial, let's keep the count below 10.)
+
+```
+joblist = [
+    {'my_variable': 'foo'},
+    {'my_variable': 'bar'},
+    {'my_variable': 'Utrecht'},
+]
+```
+
+In the above example, the first job submitted using this information will set the value of `my_variable` to `'foo'`.
+
+To submit, we pass this `joblist` as an `iter` object to the `itemdata` argument of the `.submit` method:
+
+```
+submit_info = schedd.submit(template_object, itemdata=iter(joblist))
+```
 
 To confirm the submission worked as expected, let's check the info in `submit_info`:
 
@@ -176,15 +210,15 @@ We do so using the `query` method of the `Schedd` object.
 Run this command, and then we'll explain what's happening.
 
 ```
-query = schedd.query(constraint='ClusterId == {}'.format(submit_info.cluster()), projection=['ClusterId', 'ProcId', 'JobStatus'])
+query = schedd.query(constraint='ClusterId == {}'.format(submit_info.cluster()), projection=['ClusterId', 'ProcId', 'Args', 'JobStatus'])
 ```
 
 This method is taking two arguments: `constraint` and `projection`.
 The `constraint` argument limits the results to only the jobs in the queue that match the constraint(s).
 The `projection` argument limits the information that is returned; you can think of it as an output selector.
 
-If you do not set the `constraint`, the query will return information on **everyone's** active jobs that are in the queue.
-If you do not set the `projection`, the query will return **all the information** HTCondor has for each job it returns.
+> If you do not set the `constraint`, the query will return information on **everyone's** active jobs that are in the queue.
+> If you do not set the `projection`, the query will return **all the information** HTCondor has for each job it returns.
 
 The query is returned as a list with the information you asked for, as well as the `ServerTime`:
 
@@ -195,7 +229,7 @@ print(query)
 You should see something like this:
 
 ```
-[[ ProcId = 0; ClusterId = 547678; JobStatus = 1; ServerTime = 1726515403 ], [ ProcId = 1; ClusterId = 547678; JobStatus = 1; ServerTime = 1726515403 ], [ ProcId = 2; ClusterId = 547678; JobStatus = 1; ServerTime = 1726515403 ]]
+[[ Args = "foo"; ProcId = 0; ClusterId = 2021620; JobStatus = 2; ServerTime = 1726520029 ], [ Args = "bar"; ProcId = 1; ClusterId = 2021620; JobStatus = 2; ServerTime = 1726520029 ], [ Args = "Utrecht"; ProcId = 2; ClusterId = 2021620; JobStatus = 2; ServerTime = 1726520029 ]]
 ```
 
 We can monitor the status of the jobs using the `query` method, but **be careful!**.
