@@ -161,6 +161,11 @@ submit_info = schedd.submit(template_object, count=3)
 ### Submitting the Submit object using Itemdata
 
 In the submit template, we have `arguments = $(Process)`.
+You can confirm this with
+
+```
+template_object['arguments']
+```
 
 Let's change this to `arguments = $(my_variable)`:
 
@@ -168,7 +173,7 @@ Let's change this to `arguments = $(my_variable)`:
 template_object['arguments'] = '$(my_variable)'
 ```
 
-We want to create a list of jobs where each job has a different value of `my_variable`.
+Now, we want to create a list of jobs where each job has a different value of `my_variable`.
 To do so, we are going to create a list object, where each item corresponds to the changes to the template `Submit` object for one job.
 
 Let's make the list, where you can create however many rows and use whatever values you want.
@@ -384,13 +389,16 @@ Let's filter out the events list for just the events with ProcId 0:
 proc0 = [i for i in events if i['Proc'] == 0]
 ```
 
-Though for a long log file, you should probably check the conditionals when you
-first create the `events` list from the `JobEventLog` iterator.
-We can accomplish this with:
-
-```
-proc0 = [i for i in jel.events(stop_after=0) if i['Proc'] == 0]
-```
+> For a long log file, you should probably check the conditionals when you
+> first create the `events` list from the `JobEventLog` iterator.
+> We can accomplish this with:
+> 
+> ```
+> proc0 = [i for i in jel.events(stop_after=0) if i['Proc'] == 0]
+> ```
+>
+> Keep in mind that the `jel` iterator was consumed when you created the `events` list earlier,
+> so if you want to try this now you will have to re-create the `jel` iterator.
 
 You can now see all of the ProcId 0 events with
 
