@@ -182,6 +182,8 @@ joblist = [
 ]
 ```
 
+> Note that you can have however many key:value pairs you want in each dictionary.
+
 In the above example, the first job submitted using this information will set the value of `my_variable` to `'foo'`.
 
 To submit, we pass this `joblist` as an `iter` object to the `itemdata` argument of the `.submit` method:
