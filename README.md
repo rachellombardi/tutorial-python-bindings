@@ -10,7 +10,11 @@ Copy the contents of the tutorial directory from
 `/data/datagrid/htcondor_tutorial/python-bindings`
 to your personal working directory.
 
-You can also clone this repository from <insert_link_here>.
+You can also clone this repository with
+
+```
+git clone -b '2024-09-Utrecht' https://github.com/CHTC/tutorial-python-bindings.git
+```
 
 ## Loading the Python bindings
 
