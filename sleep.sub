@@ -1,0 +1,11 @@
+log = sleep.$(Cluster).log
+executable = sleep.sh
+arguments = $(Process)
+output = sleep.$(Process).out
+error = sleep.$(Process).err
+request_cpus = 1
+request_memory = 1GB
+request_disk = 1GB
++UseOS = "el9"
++JobCategory = "short"
+queue 2
