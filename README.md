@@ -7,7 +7,7 @@ This document will guide you through a hands-on tutorial to explore the function
 ## Setup
 
 Copy the contents of the tutorial directory from
-`/data/datagrid/htcondor_tutorial/python-bindings`
+`/data/datagrid/htcondor_tutorial/tutorial-python-bindings`
 to your personal working directory.
 
 You can also clone this repository with
