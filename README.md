@@ -8,13 +8,28 @@ This document will guide you through a hands-on tutorial to explore the function
 
 Copy the contents of the tutorial directory from
 `/data/datagrid/htcondor_tutorial/tutorial-python-bindings`
-to your personal working directory.
+to your personal working directory on your HTCondor Access Point.
 
 You can also clone this repository with
 
 ```
 git clone -b '2024-09-Utrecht' https://github.com/CHTC/tutorial-python-bindings.git
 ```
+
+Once download is complete, you should see a directory called `tutorial-python-bindings`. Navigate into that directory:
+
+```
+cd tutorial-python-bindings
+```
+
+If you list the contents of this directory with the command `ls`, you should see the following files: 
+
+```
+LICENSE  README.md  sleep.sh  sleep.sub
+```
+
+You are now ready to continue with the tutorial. 
+
 
 ## Loading the Python bindings
 
@@ -41,6 +56,13 @@ You can load the python bindings with
 ```
 import htcondor
 ```
+
+> Some HTCondor Access Points do not have the HTCondor python bindings pre-installed. 
+> If you need to install the python bindings, in your system shell, run
+>
+> ```
+> python3 -m pip install htcondor
+> ```
 
 To demonstrate that the bindings are loaded, run this command:
 
@@ -294,7 +316,7 @@ You'll see something like this:
     ]
 ```
 
-Like with the `query` method, **do not run high-frequency checks of the history!**.
+Like with the `query` method, **do not run high-frequency checks of the history!**
 Otherwise you can overwhelm the Schedd.
 
 > While the above example commands using the `query` and `history` are not necessarily useful on their own,
@@ -379,11 +401,11 @@ In general, each event will have 'Proc', 'MyType', 'Cluster', 'Subproc', 'EventT
 
 ### Filtering events
 
-If you know that you only want information from events for a particular ProcId,
+If you know that you only want information from events for a particular ProcID,
 or that you only want information on events that are of type "Hold",
 you can filter an existing `events` list for those particular features.
 
-Let's filter out the events list for just the events with ProcId 0:
+Let's filter out the events list for just the events with ProcID 0:
 
 ```
 proc0 = [i for i in events if i['Proc'] == 0]
@@ -400,7 +422,7 @@ proc0 = [i for i in events if i['Proc'] == 0]
 > Keep in mind that the `jel` iterator was consumed when you created the `events` list earlier,
 > so if you want to try this now you will have to re-create the `jel` iterator.
 
-You can now see all of the ProcId 0 events with
+You can now see all of the ProcID 0 events with
 
 ```
 for i in proc0:
@@ -412,3 +434,4 @@ for i in proc0:
 
 ## Appendix: DAGMan jobs
 
+To learn how to submit DAGMan jobs using HTCondor's python bindings, <a href="https://htcondor.readthedocs.io/en/latest/apis/python-bindings/tutorials/DAG-Creation-And-Submission.html">follow this tutorial</a>.
